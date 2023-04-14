@@ -25,6 +25,6 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log('server started');
 });
