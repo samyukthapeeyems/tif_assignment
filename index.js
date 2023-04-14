@@ -5,15 +5,22 @@ const Auth = require('./src/auth/auth.routes');
 const Community = require('./src/community/community.routes');
 const Member = require('./src/member/member.routes');
 const Role = require('./src/role/role.routes');
+const { errorHandler } = require('./src/utils/error');
 
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+
+//routes
 app.use('/v1/auth', Auth);
 app.use('/v1/community', Community);
 app.use('/v1/member', Member);
 app.use('/v1/role', Role);
+
+//error handler
+app.use(errorHandler);
 
 
 mongoose.connect(process.env.MONGOURL, { useNewUrlParser: true, useUnifiedTopology: true });
