@@ -1,4 +1,4 @@
-const Member = require('./member.model');
+const {Member} = require('./member.model');
 
 async function hasRole(communityId, userId, roleId) {
     const hasRole = await Member.findOne({

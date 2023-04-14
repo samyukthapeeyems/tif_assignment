@@ -43,12 +43,14 @@ async function deleteMember(req, res){
         const moderatorRole = await Role.findOne({ name: 'Community Moderator' });
         const adminRole = await Role.findOne({ name: 'Community Admin' });
 
-        if (! await hasRole(community, req.user.toObject() ._id, adminRole) ||
-        ! await hasRole(community, req.user.toObject() ._id, moderatorRole)) {
+        if (! await hasRole(req.params.cid, req.user.toObject() ._id, adminRole) &&
+        ! await hasRole(req.params.cid, req.user.toObject() ._id, moderatorRole)) {
             return res.status(403).json({ message: 'Not allowed access' });
         }
 
+
         const member = await Member.findById(req.params.id).populate('community');
+
         await member.remove();
         return res.json({ message: 'Member removed successfully.' });
 

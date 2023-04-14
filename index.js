@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use('/v1/user', Auth);
+app.use('/v1/auth', Auth);
 app.use('/v1/community', Community);
 app.use('/v1/member', Member);
 app.use('/v1/role', Role);

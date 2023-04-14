@@ -1,5 +1,8 @@
 const { User } = require('./auth.model');
 let Validator = require('validatorjs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 async function signUp(req, res) {
   const { name, email, password } = req.body;

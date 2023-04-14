@@ -5,7 +5,7 @@ const { authenticate } = require('../auth/auth.middleware');
 
 
 memberRouter.post('/', authenticate, memberController.addMember)
-memberRouter.delete('/', authenticate, memberController.deleteMember)
+memberRouter.delete('/:id/community/:cid', authenticate, memberController.deleteMember)
 
 
 module.exports = memberRouter;

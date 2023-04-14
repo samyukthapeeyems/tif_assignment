@@ -6,7 +6,7 @@ const { authenticate } = require('./auth.middleware');
 
 authRouter.post('/signup', authController.signUp)
 authRouter.post('/signin', authController.signIn)
-authRouter.get('/getMe', authenticate, authController.getMe)
+authRouter.get('/me', authenticate, authController.getMe)
 
     
 

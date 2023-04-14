@@ -1,6 +1,6 @@
-const { Role } = require('./role.model');
+const { Role } = require('../role/role.model');
 const { Community } = require('./community.model');
-const { Member } = require('./member.model');
+const { Member } = require('../member/member.model');
 
 let Validator = require('validatorjs');
 
@@ -102,33 +102,32 @@ async function getAllMembers(req, res) {
 
 
 async function getMyOwnedCommunity(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
     try {
-        const { userId } = req;
-        const { page = 1, limit = 10 } = req.query;
-        const options = {
-            page: parseInt(page),
-            limit: parseInt(limit),
-            select: '_id name slug created_at updated_at',
-            sort: '-created_at',
-            populate: {
-                path: 'owner',
-                select: '_id name',
-            },
+        const userId = req.user.toObject()._id;
+        const count = await Community.countDocuments({ owner: userId });
+        const communities = await Community.find({ owner: userId })
+            .select('password') // exclude password field from owner object
+            .populate({ path: 'owner', select: 'id name' })
+            .skip(skip)
+            .limit(limit)
+            .lean();
+
+        const totalPages = Math.ceil(count / limit);
+        const meta = {
+            total: count,
+            pages: totalPages,
+            page: page,
         };
-        const communities = await Community.paginate(
-            { owner: userId },
-            options
-        );
-        res.json({
-            meta: {
-                total: communities.totalDocs,
-                pages: communities.totalPages,
-                page: communities.page,
-            },
-            data: communities.docs,
-        });
+
+        res.status(200).json({ meta, communities });
+
     } catch (err) {
-        next(err);
+        res.status(500).json({
+            message: "failed"
+        })
     }
 
 }

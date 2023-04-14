@@ -8,13 +8,13 @@ async function createRole(req, res){
   const rules = {
     name: 'required|min:2',
   };
-  const validation = new validate(req.body, rules);
+  const validation = new Validator(req.body, rules);
   if (validation.fails()) {
     return res.status(400).json({ error: validation.errors.all() });
   }
 
   const role = new Role({
-    name,
+    name
   });
   await role.save();
 
